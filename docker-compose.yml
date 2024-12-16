@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  laravel_web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_web
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8000:8000"
+    depends_on:
+      laravel_db:
+        condition: service_healthy
+    networks:
+      - laravel
+
+  laravel_db:
+    image: mysql:8.0
+    container_name: laravel_db
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+    networks:
+      - laravel
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DB_USERNAME}", "-p${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  laravel:
+    driver: bridge
+
+volumes:
+  mysql-data:
