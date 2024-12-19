@@ -4,15 +4,34 @@ services:
   laravel_web:
     build: 
       context: .
-      dockerfile: Dockerfile
+      dockerfile: php.Dockerfile
     container_name: laravel_web
     volumes:
-      - ./:/var/www/html
+      - ./web/:/var/www/html
     ports:
       - "8000:8000"
     depends_on:
       laravel_db:
         condition: service_healthy
+    networks:
+      - laravel
+
+  python_parser:
+    build: 
+      context: .
+      dockerfile: python.Dockerfile
+    container_name: parser
+    volumes:
+      - ./parser/:/parser
+    depends_on:
+      laravel_db:
+        condition: service_healthy
+    environment:
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: laravel_db
+      DB_PORT: ${DB_PORT}
     networks:
       - laravel
 
@@ -25,7 +44,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - laravel
     volumes:
