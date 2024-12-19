@@ -1,7 +1,19 @@
+<ul>
+    <li>Sotr by:</li>
+    <li>
+        <a href="/?sorting=author">Author</a>
+    </li>
+    <li>
+        <a href="/?sorting=publication_date">Date</a>
+    </li>
+    <li>
+        <a href="/?sorting=title">Title</a>
+    </li>
+</ul>
 <table>
     <thead>
         <tr>
-            <th>Publication Date</th>
+            <th>Date</th>
             <th>Title</th>
             <th>Author</th>
             <th>Tags</th>
